@@ -1,6 +1,6 @@
 # Pebble Notes
 
-Probably most of this is documented somewhere already but I always like to have a look at how it works first before trying to dig though the various forums and online documentation.
+Most of this is probable already documented somewhere but I always like to have a look at how it works first before trying to dig though the various forums and online documentation.
 
 One of the primary reasons I got a Pebble is so I could write some of my own apps that could display on the device. At this point there is no SDK available. I decided to try and figure out how the Pebble works. Here is what I have seen thus far.
 
@@ -9,7 +9,126 @@ Related Source Projects
 * https://github.com/PebbleDev/pebble-tools
 * https://github.com/Hexxeh/libpebble
 
+
+## Watch Faces
+
+With the [pbw-tool] [1] you can download all watch faces and unpack the pbw files. The PBW files are simply ZIP formatted files the the following contents.
+
+The next sections assume you have already download the [pbw-tool] [1].
+
+### Download All Watch Faces
+
+This is an example of running *download_watchfaces.py*.
+
+
+```SHELL
+[faces]$ python ../../pbw-tools/download_watchfaces.py
+[INFO    ] Downloading watchfaces linked from http://pebble-static.s3.amazonaws.com/watchfaces/index.html
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/simplicity.pbw -> simplicity.pbw
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/times_square.pbw -> times_square.pbw
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/brains.pbw -> brains.pbw
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/segment_six.pbw -> segment_six.pbw
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/just_a_little_bit.pbw -> just_a_little_bit.pbw
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/big-time-12.pbw -> big-time-12.pbw
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/big-time-24.pbw -> big-time-24.pbw
+[INFO    ] Downloading http://pebble-static.s3.amazonaws.com/watchfaces/apps/tic_tock_toe.pbw -> tic_tock_toe.pbw
+[faces]$ ls
+big-time-12.pbw		big-time-24.pbw		brains.pbw		just_a_little_bit.pbw	segment_six.pbw		simplicity.pbw		tic_tock_toe.pbw	times_square.pbw
+
+```
+### Unpack a watch face
+
+Either unzip a .pbw file or *extract_pbw.py* to convert the files to their individual files. Here is an example using the script:
+
+```SHELL
+[watchFaces] python ../../../pbw-tools/extract_pbw.py ../brains.pbw 
+[INFO    ] Opening ../brains.pbw
+[INFO    ] Unpacking to brains
+[watchFaces]$ cd brains
+[brains]$ ls
+app_resources.pbpack	manifest.json		pebble-app.bin
+
+```
+
+### Unpack the watch face resource files
+
+You can unpack the resource files with *unpack_pbpack.py*. Here is a sample output.
+
+```SHELL
+brains]$ python ../../../../pbw-tools/unpack_pbpack.py 
+Processing "app_resources.pbpack"
+<PBPack ACC2177A "dev_0.0" [7]>
+Generating IMAGE_MENU_ICON.png
+<Resource 1 @ 00000000:0000007c CRC:caca1926 <BMP 24x28 (4 scanlines) size 112>>
+Generating IMAGE_BACKGROUND.png
+<Resource 2 @ 0000007c:00000da8 CRC:f1dcb294 <BMP 144x168 (20 scanlines) size 3360>>
+Generating IMAGE_HOUR_HAND.png
+<Resource 3 @ 00000da8:00000e70 CRC:56900cc4 <BMP 8x47 (4 scanlines) size 188>>
+Generating IMAGE_MINUTE_HAND.png
+<Resource 4 @ 00000e70:00000f90 CRC:60316f57 <BMP 8x69 (4 scanlines) size 276>>
+Generating IMAGE_SECOND_HAND.png
+<Resource 5 @ 00000f90:000010b0 CRC:361723a9 <BMP 8x69 (4 scanlines) size 276>>
+Generating IMAGE_CENTER_CIRCLE.png-trans
+<Resource 6 @ 000010b0:000010fc CRC:750fe68d <BMP 16x16 (4 scanlines) size 64>>
+Generating UNKNOWN-6.resource
+<Resource 7 @ 000010fc:00001148 CRC:653770ac <BMP 16x16 (4 scanlines) size 64>>
+[brains]$ ls
+IMAGE_BACKGROUND.png		IMAGE_HOUR_HAND.png		IMAGE_MINUTE_HAND.png		UNKNOWN-6.resource		manifest.json
+IMAGE_CENTER_CIRCLE.png-trans	IMAGE_MENU_ICON.png		IMAGE_SECOND_HAND.png		app_resources.pbpack		pebble-app.bin
+
+```
+
+### Validate the resources
+
+```SHELL
+[brains]$ python ../../../../pbw-tools/validate_pbpack.py
+Processing "app_resources.pbpack"
+CACA1926 | CACA1926
+<Resource  1 @ 0000:007c CRC:caca1926 <BMP 24x28  4B/scanline size 112>>
+F1DCB294 | F1DCB294
+<Resource  2 @ 007c:0da8 CRC:f1dcb294 <BMP 144x168 20B/scanline size 3360>>
+56900CC4 | 56900CC4
+<Resource  3 @ 0da8:0e70 CRC:56900cc4 <BMP 8x47  4B/scanline size 188>>
+60316F57 | 60316F57
+<Resource  4 @ 0e70:0f90 CRC:60316f57 <BMP 8x69  4B/scanline size 276>>
+361723A9 | 361723A9
+<Resource  5 @ 0f90:10b0 CRC:361723a9 <BMP 8x69  4B/scanline size 276>>
+750FE68D | 750FE68D
+<Resource  6 @ 10b0:10fc CRC:750fe68d <BMP 16x16  4B/scanline size 64>>
+653770AC | 653770AC
+<Resource  7 @ 10fc:1148 CRC:653770ac <BMP 16x16  4B/scanline size 64>>
+<PBPack ACC2177A "dev_0.0" [7]>
+
+```
+
+### View an image from the resource files
+
+You can view one of the extracted images by running *view_pebble_image.py*.
+
+```SHELL
+[brains]$ python ../../../../pbw-tools/view_pebble_image.py IMAGE_MINUTE_HAND.png
+<BMP 8x69 (4 scanlines) size 276>
+0
+```
+
+Note you will see an GUI popup that contains the image.
+
+
+### Invert the image file
+
+I am not quite sure what the value of this is but you can invert the image with *invert_pebble_image.py*.
+
+```SHELL
+[brains]$ cp IMAGE_MINUTE_HAND.png IMAGE_MINUTE_HAND_INVERTED.png 
+[brains]$ python ../../../../pbw-tools/invert_pebble_image.py IMAGE_MINUTE_HAND_INVERTED.png 
+
+```
+
+
 ## Firmware Updates
+
+Presumable the same process used above can be used to extract/view the resources of the watch.
+
 iPhone app launches and makes this request:
 
 ### Latest Version Request
@@ -406,3 +525,4 @@ Cache-Control: no-cache
 
 ```
 
+[1]: https://github.com/aleksandyr/pbw-tools.git        "pbw-tool"
