@@ -8,6 +8,7 @@ Related Open Source Projects:
 * [pbw-tool] [1] - Pebble Resource Scripts (Watchface)
 * [pebble-tools] [2] - Binary header parser
 * [libpebble] [3] - Serial Comms Lib
+* https://github.com/dattas/pebble-notifier
 
 Based on all this information creating a new watch face may be very easy. I am not quite sure of the format of this file *pebble-app.bin*.
 
@@ -45,7 +46,9 @@ big-time-12.pbw		big-time-24.pbw		brains.pbw		just_a_little_bit.pbw	segment_six.
 ```
 ### Unpack a watch face
 
-Either unzip a .pbw file or *extract_pbw.py* to convert the files to their individual files. Here is an example using the script:
+Either unzip a .pbw file or use the script *extract_pbw.py* to convert the files to their individual files. 
+
+Here is an example using the script:
 
 ```SHELL
 [watchFaces] python ../../../pbw-tools/extract_pbw.py ../brains.pbw 
@@ -178,6 +181,8 @@ When I ran this against the firmware bin it did not work. So that files header i
 
 
 ## Firmware Updates
+
+Pebble Binary Format information: http://pebbledev.org/wiki/Firmware_Updates
 
 Presumable the same process used above can be used to extract/view the resources of the watch.
 
@@ -490,6 +495,10 @@ The PBZ file is a zipped file which contains the following:
 
 I assume the PBW files are generated with pbw-tools.
 
+HTML Catalog for Watch Faces
+* http://pebble-static.s3.amazonaws.com/watchfaces/index.html
+
+
 ### Watch Face Request
 
 ```BASH
@@ -576,6 +585,19 @@ Cache-Control: no-cache
 }
 
 ```
+
+## Other Things Relating to Pebble
+* http://pebbledev.org/ - A very good starting point
+* http://hackingpebble.tumblr.com/
+* https://github.com/itszero/PebbleNotifier
+* https://github.com/begizi/myPebble
+* https://github.com/pebble/pebble-3d
+* https://github.com/EnJens/NotifyMyPebble
+* https://github.com/ajwootto/pStocks
+* https://github.com/nmost/trend-WATCHer
+
+
+
 
 [1]: https://github.com/aleksandyr/pbw-tools.git        "pbw-tool"
 [2]: https://github.com/PebbleDev/pebble-tools.git      "pebble-tools"
