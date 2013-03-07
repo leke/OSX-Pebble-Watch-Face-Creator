@@ -9,6 +9,8 @@ Related Source Projects
 * https://github.com/PebbleDev/pebble-tools
 * https://github.com/Hexxeh/libpebble
 
+Based on all this information creating a new watch face may be very easy. I am not quite sure of the format of this file *pebble-app.bin*.
+
 
 ## Watch Faces
 
@@ -123,6 +125,51 @@ I am not quite sure what the value of this is but you can invert the image with 
 [brains]$ python ../../../../pbw-tools/invert_pebble_image.py IMAGE_MINUTE_HAND_INVERTED.png 
 
 ```
+
+### pebble-app.bin
+
+When running [pebble-tool] [2] against *pebble-app.bin* the following is output:
+
+```SHELL
+[brains]$ ~/working/pebbleInfo/pebble-tools/appinfo pebble-app.bin 
+magic: PBLAPP
+Version: 8
+Sdk Version: 1
+App Version: 1
+size: 3172 (0xc64)
+Entry Point: 1488 (0x5d0)
+crc: 3670398314
+name: Brains Watch
+company: Pebble Technology
+unknown3: 1
+jump_table address: 2300 (0x8fc)
+flags: 1
+relocation list address: 3172 (0xc64)
+number of relocations: 6
+
+```
+
+
+This is the format of the pebble-app.bin header
+
+```C
+  char magic[8]; // PBLAPP\0\0
+  unsigned short version;
+  unsigned short sdk_version;
+  unsigned short app_version;
+  unsigned short size;
+  unsigned int entry_point;
+  unsigned int crc;
+  char name[32];
+  char company[32];
+  unsigned int unknown3; // Always seems to be one?
+  unsigned int jump_table; // offset in file
+  unsigned int flags;
+  unsigned int reloc_list; // offset in file
+  unsigned int num_relocs;
+```
+
+When I ran this against the firmware bin it did not work. So that files header is a different format.
 
 
 ## Firmware Updates
@@ -526,3 +573,4 @@ Cache-Control: no-cache
 ```
 
 [1]: https://github.com/aleksandyr/pbw-tools.git        "pbw-tool"
+[2]: https://github.com/PebbleDev/pebble-tools.git      "pebble-tools"ß
