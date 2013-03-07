@@ -4,17 +4,22 @@ Most of this is probable already documented somewhere but I always like to have 
 
 One of the primary reasons I got a Pebble is so I could write some of my own apps that could display on the device. At this point there is no SDK available. I decided to try and figure out how the Pebble works. Here is what I have seen thus far.
 
-Related Source Projects
-* https://github.com/aleksandyr/pbw-tools
-* https://github.com/PebbleDev/pebble-tools
-* https://github.com/Hexxeh/libpebble
+Related Open Source Projects:
+* [pbw-tool] [1] - Pebble Resource Scripts (Watchface)
+* [pebble-tools] [2] - Binary header parser
+* [libpebble] [3] - Serial Comms Lib
 
 Based on all this information creating a new watch face may be very easy. I am not quite sure of the format of this file *pebble-app.bin*.
+
+It maybe easier to decode the firmware file first and that should provide the necessary details to create new watch faces or even possible other apps..
 
 
 ## Watch Faces
 
-With the [pbw-tool] [1] you can download all watch faces and unpack the pbw files. The PBW files are simply ZIP formatted files the the following contents.
+With the [pbw-tool] [1] you can download all watch faces and unpack the pbw files. The PBW files are simply ZIP formatted files which contains the "app directory" with the following contents:
+* manifest.json - JSON file that describes applications meta data
+* pebble-app.bin - the watch binary format. Not quite sure of the full format
+* app_resources.pbpack - Resource files like images
 
 The next sections assume you have already download the [pbw-tool] [1].
 
@@ -573,4 +578,6 @@ Cache-Control: no-cache
 ```
 
 [1]: https://github.com/aleksandyr/pbw-tools.git        "pbw-tool"
-[2]: https://github.com/PebbleDev/pebble-tools.git      "pebble-tools"ß
+[2]: https://github.com/PebbleDev/pebble-tools.git      "pebble-tools"
+[3]: https://github.com/Hexxeh/libpebble                "libpebble"
+
